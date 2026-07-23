@@ -15,25 +15,6 @@ function Home() {
 
   return (
     <>
-      {/* Chat IA 
-    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3">
-
-      <div className="bg-white px-4 py-3 rounded-2xl shadow-lg border border-pink-100 w-64">
-        <p className="text-sm font-semibold text-gray-700 mb-1">
-          Asistente IA ✨
-        </p>
-
-        <p className="text-xs text-gray-400">
-          Hola 👋 ¿Necesitas ayuda para elegir un regalo?
-        </p>
-      </div>
-
-      <button className="w-16 h-16 rounded-full bg-[#bd3869] text-white shadow-xl flex items-center justify-center text-2xl hover:scale-105 transition duration-300">
-        💬
-      </button>
-
-    </div>
-    */}
     <main className="bg-[#fdf6f9] min-h-screen">
 
       <section className="bg-[#fce8f3] w-full mt-20">

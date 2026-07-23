@@ -23,74 +23,215 @@ const ChatBotIA = () => {
     }
 
     return (
-        <>
-            <button
-                onClick={() => setAbierto(!abierto)}
-                style={{
-                    position: "fixed",
-                    bottom: "20px",
-                    right: "20px",
-                    borderRadius: "50%",
-                    width: "60px",
-                    height: "60px",
-                    background: "#ff6b9d",
-                    color: "white",
-                    fontSize: "24px",
-                    border: "none",
-                    cursor: "pointer",
-                    zIndex: 1000
-                }}
-            >
-                💬
-            </button>
+    <>
+        {/* Contenedor flotante */}
+        <div
+            style={{
+                position: "fixed",
+                bottom: "24px",
+                right: "24px",
+                zIndex: 1000,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "flex-end",
+                gap: "12px",
+            }}
+        >
+            {/* Mensaje inicial */}
+            {!abierto && (
+                <div
+                    style={{
+                        background: "#fff",
+                        width: "260px",
+                        padding: "16px",
+                        borderRadius: "18px",
+                        border: "1px solid #fde2ec",
+                        boxShadow: "0 8px 25px rgba(0,0,0,.08)",
+                    }}
+                >
+                    <p
+                        style={{
+                            margin: 0,
+                            fontWeight: 600,
+                            color: "#444",
+                            marginBottom: "6px",
+                        }}
+                    >
+                        Asistente IA ✨
+                    </p>
 
+                    <p
+                        style={{
+                            margin: 0,
+                            fontSize: "13px",
+                            color: "#888",
+                        }}
+                    >
+                        Hola 👋 ¿Necesitas ayuda para elegir un regalo?
+                    </p>
+                </div>
+            )}
+
+            {/* Ventana del chat */}
             {abierto && (
                 <div
                     style={{
-                        position: "fixed",
-                        bottom: "90px",
-                        right: "20px",
-                        width: "320px",
-                        maxHeight: "450px",
-                        background: "white",
-                        borderRadius: "12px",
-                        boxShadow: "0 4px 20px rgba(0,0,0,0.2)",
-                        padding: "16px",
-                        zIndex: 1000,
+                        width: "340px",
+                        height: "470px",
+                        background: "#fff",
+                        borderRadius: "22px",
+                        overflow: "hidden",
+                        boxShadow: "0 15px 40px rgba(0,0,0,.18)",
                         display: "flex",
-                        flexDirection: "column"
+                        flexDirection: "column",
                     }}
                 >
-                    <h4 style={{ marginTop: 0 }}>Asistente de regalos 🎁</h4>
+                    {/* Header */}
+                    <div
+                        style={{
+                            background: "#bd3869",
+                            color: "#fff",
+                            padding: "16px",
+                            fontWeight: 600,
+                            fontSize: "17px",
+                        }}
+                    >
+                        🎁 Asistente IA
+                    </div>
 
-                    <input
-                        type="text"
-                        value={mensaje}
-                        onChange={(e) => setMensaje(e.target.value)}
-                        placeholder="¿Qué regalo buscas?"
-                        style={{ padding: "8px", marginBottom: "8px" }}
-                        onKeyDown={(e) => e.key === "Enter" && handleBuscar()}
-                    />
+                    {/* Contenido */}
+                    <div
+                        style={{
+                            flex: 1,
+                            padding: "16px",
+                            overflowY: "auto",
+                            background: "#fafafa",
+                        }}
+                    >
+                        {resultados.length === 0 && (
+                            <p
+                                style={{
+                                    color: "#777",
+                                    fontSize: "14px",
+                                }}
+                            >
+                                Escribe qué tipo de regalo buscas y te ayudaré a
+                                encontrar las mejores opciones.
+                            </p>
+                        )}
 
-                    <button onClick={handleBuscar} disabled={cargando} style={{ marginBottom: "8px" }}>
-                        {cargando ? "Buscando..." : "Buscar"}
-                    </button>
-
-                    {error && <p style={{ color: "red" }}>{error}</p>}
-
-                    <div style={{ overflowY: "auto", flex: 1 }}>
                         {resultados.map((prod) => (
-                            <div key={prod._id} style={{ borderBottom: "1px solid #eee", padding: "8px 0" }}>
+                            <div
+                                key={prod._id}
+                                style={{
+                                    background: "#fff",
+                                    borderRadius: "12px",
+                                    padding: "12px",
+                                    marginBottom: "12px",
+                                    boxShadow:
+                                        "0 2px 8px rgba(0,0,0,.05)",
+                                }}
+                            >
                                 <strong>{prod.nombre}</strong>
-                                <p style={{ margin: "4px 0", fontSize: "13px" }}>{prod.descripcion}</p>
-                                <span>${prod.precio}</span>
+
+                                <p
+                                    style={{
+                                        margin: "8px 0",
+                                        fontSize: "13px",
+                                        color: "#666",
+                                    }}
+                                >
+                                    {prod.descripcion}
+                                </p>
+
+                                <span
+                                    style={{
+                                        color: "#bd3869",
+                                        fontWeight: "bold",
+                                    }}
+                                >
+                                    ${prod.precio}
+                                </span>
                             </div>
                         ))}
+
+                        {error && (
+                            <p style={{ color: "red" }}>{error}</p>
+                        )}
+                    </div>
+
+                    {/* Input */}
+                    <div
+                        style={{
+                            padding: "16px",
+                            borderTop: "1px solid #eee",
+                            display: "flex",
+                            gap: "8px",
+                        }}
+                    >
+                        <input
+                            type="text"
+                            value={mensaje}
+                            onChange={(e) => setMensaje(e.target.value)}
+                            onKeyDown={(e) =>
+                                e.key === "Enter" && handleBuscar()
+                            }
+                            placeholder="¿Qué regalo buscas?"
+                            style={{
+                                flex: 1,
+                                border: "1px solid #ddd",
+                                borderRadius: "12px",
+                                padding: "10px 14px",
+                                outline: "none",
+                            }}
+                        />
+
+                        <button
+                            onClick={handleBuscar}
+                            disabled={cargando}
+                            style={{
+                                background: "#bd3869",
+                                color: "#fff",
+                                border: "none",
+                                borderRadius: "12px",
+                                padding: "0 18px",
+                                cursor: "pointer",
+                                fontWeight: 600,
+                            }}
+                        >
+                            {cargando ? "..." : "➜"}
+                        </button>
                     </div>
                 </div>
             )}
-        </>
-    )
+
+            {/* Botón flotante */}
+            <button
+                onClick={() => setAbierto(!abierto)}
+                style={{
+                    width: "64px",
+                    height: "64px",
+                    borderRadius: "50%",
+                    background: "#bd3869",
+                    color: "#fff",
+                    border: "none",
+                    cursor: "pointer",
+                    fontSize: "28px",
+                    boxShadow: "0 10px 25px rgba(189,56,105,.35)",
+                    transition: "all .25s ease",
+                }}
+                onMouseEnter={(e) =>
+                    (e.currentTarget.style.transform = "scale(1.08)")
+                }
+                onMouseLeave={(e) =>
+                    (e.currentTarget.style.transform = "scale(1)")
+                }
+            >
+                💬
+            </button>
+        </div>
+    </>
+);
 }
 
 export default ChatBotIA
