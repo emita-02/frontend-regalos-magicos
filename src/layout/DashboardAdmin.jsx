@@ -56,7 +56,11 @@ const DashboardAdmin = () => {
             alt="logo"
             className="w-16 h-16 object-contain mb-2"
           />
-          <h2 className="text-lg font-bold text-[#bd3869]">Regalos Mágicos</h2>
+          <Link to="/" className="hover:opacity-80 transition-opacity">
+            <h2 className="text-lg font-bold text-[#bd3869] text-center">
+              Regalos Mágicos
+            </h2>
+          </Link>
           <p className="text-xs text-gray-400">Panel de administración</p>
         </div>
 
