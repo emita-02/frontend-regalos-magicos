@@ -15,7 +15,7 @@ function Home() {
 
   return (
     <>
-      {/* Chat IA */}
+      {/* Chat IA 
     <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3">
 
       <div className="bg-white px-4 py-3 rounded-2xl shadow-lg border border-pink-100 w-64">
@@ -33,7 +33,7 @@ function Home() {
       </button>
 
     </div>
-    
+    */}
     <main className="bg-[#fdf6f9] min-h-screen">
 
       <section className="bg-[#fce8f3] w-full mt-20">

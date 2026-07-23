@@ -20,6 +20,13 @@ function AdminProductos() {
   const [modalAbierto, setModalAbierto] = useState(false);
   const [productoEditando, setProductoEditando] = useState(null); // null = modo "crear"
 
+  // 🆕 Modal secundario para crear una categoría sin salir del formulario de producto
+  const [modalCategoriaAbierto, setModalCategoriaAbierto] = useState(false);
+  const [nombreCategoria, setNombreCategoria] = useState("");
+  const [descripcionCategoria, setDescripcionCategoria] = useState("");
+  const [guardandoCategoria, setGuardandoCategoria] = useState(false);
+  const [errorCategoria, setErrorCategoria] = useState("");
+
   const cargarProductos = async () => {
     const url = `${import.meta.env.VITE_BACKEND_URL}/tienda/productos`;
     const data = await fetchDataBackend(url, null, "GET");
@@ -30,6 +37,40 @@ function AdminProductos() {
     const url = `${import.meta.env.VITE_BACKEND_URL}/tienda/categorias`;
     const data = await fetchDataBackend(url, null, "GET");
     if (data) setCategorias(data);
+  };
+
+  const abrirModalCategoria = () => {
+    setNombreCategoria("");
+    setDescripcionCategoria("");
+    setErrorCategoria("");
+    setModalCategoriaAbierto(true);
+  };
+
+  const guardarCategoria = async () => {
+    if (!nombreCategoria.trim()) {
+      setErrorCategoria("El nombre de la categoría es obligatorio");
+      return;
+    }
+
+    setGuardandoCategoria(true);
+    setErrorCategoria("");
+
+    const url = `${import.meta.env.VITE_BACKEND_URL}/tienda/categorias`;
+    const response = await fetchDataBackend(
+      url,
+      { nombre: nombreCategoria.trim(), descripcion: descripcionCategoria.trim() },
+      "POST",
+      { Authorization: `Bearer ${token}` },
+    );
+
+    setGuardandoCategoria(false);
+
+    if (response?.nuevaCategoria) {
+      await cargarCategorias();
+      // La dejamos ya seleccionada en el formulario de producto que está abierto detrás
+      setValue("categoria", response.nuevaCategoria._id);
+      setModalCategoriaAbierto(false);
+    }
   };
 
   useEffect(() => {
@@ -280,9 +321,18 @@ function AdminProductos() {
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-gray-500 mb-1 block">
-                  Categoría
-                </label>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="text-xs font-semibold text-gray-500 block">
+                    Categoría
+                  </label>
+                  <button
+                    type="button"
+                    onClick={abrirModalCategoria}
+                    className="text-xs font-semibold text-[#00b1c1] hover:underline"
+                  >
+                    + Nueva categoría
+                  </button>
+                </div>
                 <select
                   className="w-full border border-pink-100 rounded-xl px-4 py-2 text-sm outline-none focus:border-[#00b1c1]"
                   {...register("categoria", {
@@ -354,6 +404,53 @@ function AdminProductos() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* 🆕 Modal secundario: crear categoría sin salir del formulario de producto */}
+      {modalCategoriaAbierto && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-[60] px-4">
+          <div className="bg-white rounded-3xl p-8 w-full max-w-sm">
+            <h2 className="text-xl font-bold text-gray-700 mb-6">
+              Nueva categoría
+            </h2>
+
+            <div className="flex flex-col gap-4">
+              <div>
+                <label className="text-xs font-semibold text-gray-500 mb-1 block">
+                  Nombre
+                </label>
+                <input
+                  type="text"
+                  value={nombreCategoria}
+                  onChange={(e) => setNombreCategoria(e.target.value)}
+                  className="w-full border border-pink-100 rounded-xl px-4 py-2 text-sm outline-none focus:border-[#00b1c1]"
+                  placeholder="Ej. Desayunos sorpresa"
+                />
+                {errorCategoria && (
+                  <p className="text-red-400 text-xs mt-1">{errorCategoria}</p>
+                )}
+              </div>
+
+              <div className="flex gap-3 mt-2">
+                <button
+                  type="button"
+                  onClick={guardarCategoria}
+                  disabled={guardandoCategoria}
+                  className="flex-1 bg-[#bd3869] text-white py-3 rounded-xl text-sm font-semibold hover:opacity-90 transition disabled:opacity-60"
+                >
+                  {guardandoCategoria ? "Guardando..." : "Crear categoría"}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setModalCategoriaAbierto(false)}
+                  className="flex-1 border border-pink-100 text-gray-400 py-3 rounded-xl text-sm font-semibold hover:bg-[#fdf6f9] transition"
+                >
+                  Cancelar
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}
